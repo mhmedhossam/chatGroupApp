@@ -77,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   hint: "Email",
                   label: "Email",
-                  obscure: false,
                 ),
                 const SizedBox(height: 10),
 

@@ -70,7 +70,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   hint: "name",
                   label: "name",
-                  obscure: false,
                 ),
                 const SizedBox(height: 10),
                 CustomTextfieldWidget(
@@ -90,7 +89,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   hint: "Email",
                   label: "Email",
-                  obscure: false,
                 ),
                 const SizedBox(height: 10),
 

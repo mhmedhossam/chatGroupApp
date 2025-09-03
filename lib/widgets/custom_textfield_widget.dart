@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 class CustomTextfieldWidget extends StatelessWidget {
   final String hint;
   final String label;
-  final bool obscure;
+  bool? obscure = false;
   Widget? suffixIcon;
   TextEditingController? controller;
   String? Function(String?)? validator;
   Function(String)? onchanged;
   CustomTextfieldWidget({
     super.key,
+    this.obscure,
     required this.hint,
     required this.label,
-    required this.obscure,
+
     this.validator,
     this.controller,
     this.onchanged,
@@ -29,7 +30,7 @@ class CustomTextfieldWidget extends StatelessWidget {
       onChanged: onchanged,
 
       cursorColor: Colors.white,
-      obscureText: obscure,
+      obscureText: obscure!,
       cursorErrorColor: Colors.white,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
