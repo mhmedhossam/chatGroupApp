@@ -1,4 +1,5 @@
 import 'package:chatapp/cubits/chatcubit/chatcubit.dart';
+import 'package:chatapp/cubits/logincubit/logincubit.dart';
 import 'package:chatapp/firebase_options.dart';
 import 'package:chatapp/screens/chat_page.dart';
 import 'package:chatapp/screens/login_screen.dart';
@@ -21,7 +22,10 @@ class ChatApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        LoginScreen.id: (context) => LoginScreen(),
+        LoginScreen.id: (context) => BlocProvider(
+          create: (context) => Logincubit(),
+          child: LoginScreen(),
+        ),
         RegisterScreen.id: (context) => RegisterScreen(),
         ChatPage.id: (context) =>
             BlocProvider(create: (context) => Chatcubit(), child: ChatPage()),
@@ -31,4 +35,3 @@ class ChatApp extends StatelessWidget {
     );
   }
 }
- //متنساش ترجع الصفحه ل لوجين 
