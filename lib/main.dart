@@ -1,5 +1,7 @@
+import 'package:chatapp/core/utils/app_font.dart';
 import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_cubit.dart';
 import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_cubit.dart';
+import 'package:chatapp/features/splash_screen/splash_screen.dart';
 import 'package:chatapp/firebase_options.dart';
 import 'package:chatapp/features/chat/presentation/view/chat_page.dart';
 import 'package:chatapp/features/auth/presentation/view/login_screen.dart';
@@ -34,8 +36,10 @@ class ChatApp extends StatelessWidget {
           create: (context) => ChatCubit()..chatPage(),
           child: ChatPage(),
         ),
+
+        SplashScreen.id: (context) => SplashScreen(),
       },
-      initialRoute: LoginScreen.id,
+      initialRoute: SplashScreen.id,
       // home: LoginScreen(),
     );
   }

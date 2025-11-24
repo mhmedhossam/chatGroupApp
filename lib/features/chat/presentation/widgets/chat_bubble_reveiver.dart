@@ -1,11 +1,19 @@
+import 'package:chatapp/core/constant/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class ChatBubleReceiver extends StatelessWidget {
+class ChatBubbleReceiver extends StatelessWidget {
   String? message;
   final String nameReceive;
+  Timestamp? date;
 
-  ChatBubleReceiver({super.key, this.message, required this.nameReceive});
+  ChatBubbleReceiver({
+    super.key,
+    this.message,
+    this.date,
+    required this.nameReceive,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +31,7 @@ class ChatBubleReceiver extends StatelessWidget {
                 child: Icon(Icons.account_circle_sharp, size: 40),
                 // child: Text(
                 //   nameReceive,
-                //   style: TextStyle(fontSize: 10, fontFamily: "Pacifico"),
+                //   style: TextStyle(fontSize: 10, ),
                 // ),
               ),
             ),
@@ -50,11 +58,12 @@ class ChatBubleReceiver extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      nameReceive,
-                      style: TextStyle(fontSize: 10, fontFamily: "Pacifico"),
-                    ),
+                    Text(nameReceive, style: TextStyle(fontSize: 10)),
                     Text(message!, style: TextStyle(color: Colors.white)),
+                    Text(
+                      formatDate(date!.toDate()),
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),

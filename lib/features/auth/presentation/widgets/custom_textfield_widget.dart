@@ -5,6 +5,7 @@ class CustomTextfieldWidget extends StatelessWidget {
   final String label;
   bool obscure;
   Widget? suffixIcon;
+  AutovalidateMode? autovalidateMode;
   TextEditingController? controller;
   String? Function(String?)? validator;
   Function(String)? onChanged;
@@ -13,7 +14,7 @@ class CustomTextfieldWidget extends StatelessWidget {
     this.obscure = false,
     required this.hint,
     required this.label,
-
+    this.autovalidateMode,
     this.validator,
     this.controller,
     this.onChanged,
@@ -24,7 +25,7 @@ class CustomTextfieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       style: TextStyle(color: Colors.white),
-
+      autovalidateMode: autovalidateMode,
       controller: controller,
       validator: validator,
       onChanged: onChanged,

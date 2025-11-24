@@ -1,10 +1,18 @@
+import 'package:chatapp/core/constant/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class ChatBubleSender extends StatelessWidget {
+class ChatBubbleSender extends StatelessWidget {
   String? message;
+  Timestamp? date;
   final String nameSender;
-  ChatBubleSender({super.key, this.message, required this.nameSender});
+  ChatBubbleSender({
+    super.key,
+    this.message,
+    required this.nameSender,
+    this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +36,10 @@ class ChatBubleSender extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 184, 183, 183),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
                     bottomRight: Radius.circular(0),
-                    bottomLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(20),
                   ),
                 ),
                 child: Column(
@@ -41,12 +49,18 @@ class ChatBubleSender extends StatelessWidget {
                       nameSender,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 10,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        fontFamily: "Pacifico",
                       ),
                     ),
-                    Text(message!, style: TextStyle(color: Colors.white)),
+                    Text(
+                      message ?? "",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      formatDate(date!.toDate()),
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
                   ],
                 ),
               ),

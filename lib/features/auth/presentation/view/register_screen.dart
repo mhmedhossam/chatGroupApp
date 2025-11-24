@@ -1,5 +1,6 @@
 import 'package:chatapp/core/constant/constants.dart';
 import 'package:chatapp/core/dialogs/snack_bar.dart';
+import 'package:chatapp/core/utils/app_font.dart';
 import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_cubit.dart';
 import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_states.dart';
 import 'package:chatapp/features/chat/presentation/view/chat_page.dart';
@@ -58,10 +59,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Image.asset("assets/images/scholar.png", height: 100),
                       Center(
                         child: Text(
-                          "Welcome Chat",
+                          "Chat Group",
                           style: TextStyle(
+                            fontFamily: AppFont.pacifico,
                             fontSize: 40,
-                            fontFamily: "Pacifico",
                             color: Colors.white,
                           ),
                         ),
@@ -77,9 +78,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 10),
                       CustomTextfieldWidget(
+                        autovalidateMode: cubit.autovalidateMode,
                         controller: cubit.nameController,
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return " please enter your name";
                           }
                           return null;
@@ -90,6 +92,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 10),
                       CustomTextfieldWidget(
+                        autovalidateMode: cubit.autovalidateMode,
+
                         controller: cubit.emailController,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -108,14 +112,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 10),
 
                       CustomTextfieldWidget(
+                        autovalidateMode: cubit.autovalidateMode,
+
                         controller: cubit.passwordController,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return " please enter your password";
-                          } else if (value == "1234567") {
-                            return "please enter strong password";
                           } else if (value.length <= 6) {
-                            return " please enter right password";
+                            return " please enter Strong password";
                           }
                           return null;
                         },
@@ -140,6 +144,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: () async {
                           if (cubit.formKey.currentState!.validate()) {
                             cubit.register();
+                          } else {
+                            cubit.autovalidateMode = AutovalidateMode.always;
+                            setState(() {});
                           }
                         },
 

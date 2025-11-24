@@ -1,4 +1,5 @@
 import 'package:chatapp/core/constant/constants.dart';
+import 'package:chatapp/core/utils/app_font.dart';
 import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_cubit.dart';
 import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_states.dart';
 import 'package:chatapp/features/chat/presentation/view/chat_page.dart';
@@ -55,11 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     Image.asset("assets/images/scholar.png", height: 100),
                     Center(
                       child: Text(
-                        "Welcome Chat",
+                        "Chat Group",
                         style: TextStyle(
                           fontSize: 40,
-                          fontFamily: "Pacifico",
                           color: Colors.white,
+                          fontFamily: AppFont.pacifico,
                         ),
                       ),
                     ),
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 10),
                     CustomTextfieldWidget(
+                      autovalidateMode: cubit.autovalidateMode,
                       controller: cubit.emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -93,6 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
 
                     CustomTextfieldWidget(
+                      autovalidateMode: cubit.autovalidateMode,
+
                       suffixIcon: IconButton(
                         onPressed: () {
                           enablePass = !enablePass;
@@ -122,6 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         if (cubit.formKey.currentState!.validate()) {
                           cubit.login();
+                        } else {
+                          cubit.autovalidateMode = AutovalidateMode.always;
+                          setState(() {});
                         }
                       },
                       text: "Login",

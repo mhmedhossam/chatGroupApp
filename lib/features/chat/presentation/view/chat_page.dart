@@ -1,9 +1,11 @@
 import 'package:chatapp/core/constant/constants.dart';
+import 'package:chatapp/core/utils/app_font.dart';
 import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_cubit.dart';
 import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_states.dart';
 import 'package:chatapp/features/auth/presentation/view/login_screen.dart';
 import 'package:chatapp/features/chat/presentation/widgets/chat_bubble_reveiver.dart';
 import 'package:chatapp/features/chat/presentation/widgets/chat_buble_sender.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +57,13 @@ class _ChatPageState extends State<ChatPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset("assets/images/scholar.png", height: 50, width: 50),
-            Text("Whatsapp Group", style: TextStyle(color: Colors.white)),
+            Text(
+              "Chat Group",
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: AppFont.pacifico,
+              ),
+            ),
           ],
         ),
       ),
@@ -84,13 +92,16 @@ class _ChatPageState extends State<ChatPage> {
                       itemCount: listMessage.length,
                       itemBuilder: (context, index) =>
                           listMessage[index].id == email
-                          ? ChatBubleSender(
+                          ? ChatBubbleSender(
                               message: listMessage[index].message,
                               nameSender: listMessage[index].name,
+                              date: listMessage[index].date as Timestamp,
                             )
-                          : ChatBubleReceiver(
+                          : ChatBubbleReceiver(
                               message: listMessage[index].message,
                               nameReceive: listMessage[index].name,
+                              date: listMessage[index].date as Timestamp,
+
                               // FirebaseAuth.instance.currentUser.displayName,
                             ),
                     );
@@ -108,9 +119,7 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.all(16.0),
               child: TextField(
                 controller: messageController,
-                onChanged: (value) {
-                  valuee = value;
-                },
+
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -122,11 +131,11 @@ class _ChatPageState extends State<ChatPage> {
                   hintText: "enter your message",
                   suffixIcon: IconButton(
                     onPressed: () {
-                      if (valuee.isNotEmpty) {
+                      if (messageController.text.isNotEmpty) {
                         BlocProvider.of<ChatCubit>(context).sendMessage(
                           email: email,
                           name: name,
-                          message: valuee,
+                          message: messageController.text,
                         );
 
                         messageController.clear();

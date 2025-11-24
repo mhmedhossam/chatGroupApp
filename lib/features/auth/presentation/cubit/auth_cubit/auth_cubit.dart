@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AuthCubit extends Cubit<AuthStates> {
   final emailController = TextEditingController();
   final nameController = TextEditingController();
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   final passwordController = TextEditingController();
+  String? errorMessage;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   AuthCubit() : super(InitialState());
@@ -23,7 +25,6 @@ class AuthCubit extends Cubit<AuthStates> {
       String name = user.user!.displayName!;
       emit(AuthSucceededState(name: name));
     } on FirebaseAuthException catch (e) {
-      String errorMessage;
       if (e.code == 'user-not-found') {
         errorMessage = "No user found for that email.";
       } else if (e.code == 'wrong-password') {
@@ -58,12 +59,14 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(AuthSucceededState());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        emit(AuthFailureState(errorMessage: e.toString()));
+        errorMessage = "weak password please enter strong password";
       } else if (e.code == 'email-already-in-use') {
-        emit(AuthFailureState(errorMessage: e.toString()));
+        errorMessage = "email already in use ";
       } else {
-        emit(AuthFailureState(errorMessage: e.toString()));
+        errorMessage = "some thing wrong please try again";
       }
+
+      emit(AuthFailureState(errorMessage: errorMessage));
     } catch (e) {
       emit(AuthFailureState(errorMessage: "some thing wrong please try again"));
     }
