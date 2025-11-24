@@ -1,13 +1,11 @@
-import 'package:chatapp/constants.dart';
-import 'package:chatapp/cubits/chatcubit/chatcubit.dart';
-import 'package:chatapp/cubits/chatcubit/chatstates.dart';
-import 'package:chatapp/models/message_model.dart';
-import 'package:chatapp/screens/login_screen.dart';
-import 'package:chatapp/widgets/chat_bubble_reveiver.dart';
-import 'package:chatapp/widgets/chat_buble_sender.dart';
+import 'package:chatapp/core/constant/constants.dart';
+import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_cubit.dart';
+import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_states.dart';
+import 'package:chatapp/features/auth/presentation/view/login_screen.dart';
+import 'package:chatapp/features/chat/presentation/widgets/chat_bubble_reveiver.dart';
+import 'package:chatapp/features/chat/presentation/widgets/chat_buble_sender.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatPage extends StatefulWidget {
@@ -20,13 +18,8 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late String valuee;
-  final listcontroller = ScrollController();
-  final messagecontroller = TextEditingController();
-  @override
-  void initState() {
-    BlocProvider.of<Chatcubit>(context).chatpage();
-    super.initState();
-  }
+  final listController = ScrollController();
+  final messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +63,11 @@ class _ChatPageState extends State<ChatPage> {
         child: Column(
           children: [
             Expanded(
-              child: BlocConsumer<Chatcubit, Chatstates>(
+              child: BlocConsumer<ChatCubit, ChatStates>(
                 listener: (context, state) {
-                  if (state is LoadedMessagesstate) {
-                    if (listcontroller.hasClients) {
-                      listcontroller.animateTo(
+                  if (state is LoadedMessagesState) {
+                    if (listController.hasClients) {
+                      listController.animateTo(
                         0,
                         duration: Duration(milliseconds: 300),
                         curve: Curves.easeOut,
@@ -83,11 +76,11 @@ class _ChatPageState extends State<ChatPage> {
                   }
                 },
                 builder: (context, state) {
-                  if (state is LoadedMessagesstate) {
+                  if (state is LoadedMessagesState) {
                     var listMessage = state.listMessage;
                     return ListView.builder(
                       reverse: true,
-                      controller: listcontroller,
+                      controller: listController,
                       itemCount: listMessage.length,
                       itemBuilder: (context, index) =>
                           listMessage[index].id == email
@@ -101,9 +94,9 @@ class _ChatPageState extends State<ChatPage> {
                               // FirebaseAuth.instance.currentUser.displayName,
                             ),
                     );
-                  } else if (state is Loadingstate) {
+                  } else if (state is LoadingState) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is Failureloadstate) {
+                  } else if (state is FailureLoadState) {
                     return Center(child: Text("there is an error"));
                   } else {
                     return const Center(child: Text('Start chatting!'));
@@ -114,7 +107,7 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextField(
-                controller: messagecontroller,
+                controller: messageController,
                 onChanged: (value) {
                   valuee = value;
                 },
@@ -130,13 +123,13 @@ class _ChatPageState extends State<ChatPage> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       if (valuee.isNotEmpty) {
-                        BlocProvider.of<Chatcubit>(context).sendmessage(
+                        BlocProvider.of<ChatCubit>(context).sendMessage(
                           email: email,
                           name: name,
                           message: valuee,
                         );
 
-                        messagecontroller.clear();
+                        messageController.clear();
                       }
                     },
                     icon: Icon(Icons.send),

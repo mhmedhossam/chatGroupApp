@@ -1,17 +1,16 @@
-import 'package:chatapp/constants.dart';
-import 'package:chatapp/cubits/chatcubit/chatstates.dart';
-import 'package:chatapp/models/message_model.dart';
+import 'package:chatapp/core/constant/constants.dart';
+import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_states.dart';
+import 'package:chatapp/features/chat/data/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Chatcubit extends Cubit<Chatstates> {
-  Chatcubit() : super(Initialstate());
+class ChatCubit extends Cubit<ChatStates> {
+  ChatCubit() : super(InitialState());
   CollectionReference messages = FirebaseFirestore.instance.collection(
     kMessageCollection,
   );
-  void chatpage() {
-    emit(Loadingstate());
+  void chatPage() {
+    emit(LoadingState());
 
     try {
       messages
@@ -24,18 +23,18 @@ class Chatcubit extends Cubit<Chatstates> {
               for (var doc in snapshot.docs) {
                 listMessage.add(MessageModel.fromJson(doc));
               }
-              emit(LoadedMessagesstate(listMessage: listMessage));
+              emit(LoadedMessagesState(listMessage: listMessage));
             },
             onError: (error) {
-              emit(Failureloadstate());
+              emit(FailureLoadState());
             },
           );
     } catch (e) {
-      emit(Failureloadstate());
+      emit(FailureLoadState());
     }
   }
 
-  Future<void> sendmessage({
+  Future<void> sendMessage({
     required String message,
     required String email,
     required String name,

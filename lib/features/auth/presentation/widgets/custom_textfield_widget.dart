@@ -7,7 +7,7 @@ class CustomTextfieldWidget extends StatelessWidget {
   Widget? suffixIcon;
   TextEditingController? controller;
   String? Function(String?)? validator;
-  Function(String)? onchanged;
+  Function(String)? onChanged;
   CustomTextfieldWidget({
     super.key,
     this.obscure = false,
@@ -16,7 +16,7 @@ class CustomTextfieldWidget extends StatelessWidget {
 
     this.validator,
     this.controller,
-    this.onchanged,
+    this.onChanged,
     this.suffixIcon,
   });
 
@@ -27,7 +27,7 @@ class CustomTextfieldWidget extends StatelessWidget {
 
       controller: controller,
       validator: validator,
-      onChanged: onchanged,
+      onChanged: onChanged,
 
       cursorColor: Colors.white,
       obscureText: obscure,

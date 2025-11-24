@@ -1,9 +1,9 @@
-import 'package:chatapp/cubits/chatcubit/chatcubit.dart';
-import 'package:chatapp/cubits/logincubit/logincubit.dart';
+import 'package:chatapp/features/chat/presentation/cubit/chat_cubit/chat_cubit.dart';
+import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_cubit.dart';
 import 'package:chatapp/firebase_options.dart';
-import 'package:chatapp/screens/chat_page.dart';
-import 'package:chatapp/screens/login_screen.dart';
-import 'package:chatapp/screens/register_screen.dart';
+import 'package:chatapp/features/chat/presentation/view/chat_page.dart';
+import 'package:chatapp/features/auth/presentation/view/login_screen.dart';
+import 'package:chatapp/features/auth/presentation/view/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,12 +23,17 @@ class ChatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         LoginScreen.id: (context) => BlocProvider(
-          create: (context) => Logincubit(),
+          create: (context) => AuthCubit(),
           child: LoginScreen(),
         ),
-        RegisterScreen.id: (context) => RegisterScreen(),
-        ChatPage.id: (context) =>
-            BlocProvider(create: (context) => Chatcubit(), child: ChatPage()),
+        RegisterScreen.id: (context) => BlocProvider(
+          create: (context) => AuthCubit(),
+          child: RegisterScreen(),
+        ),
+        ChatPage.id: (context) => BlocProvider(
+          create: (context) => ChatCubit()..chatPage(),
+          child: ChatPage(),
+        ),
       },
       initialRoute: LoginScreen.id,
       // home: LoginScreen(),

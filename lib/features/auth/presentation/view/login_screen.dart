@@ -1,10 +1,10 @@
-import 'package:chatapp/constants.dart';
-import 'package:chatapp/cubits/logincubit/logincubit.dart';
-import 'package:chatapp/cubits/logincubit/loginstates.dart';
-import 'package:chatapp/screens/chat_page.dart';
-import 'package:chatapp/screens/register_screen.dart';
-import 'package:chatapp/widgets/custom_button.dart';
-import 'package:chatapp/widgets/custom_textfield_widget.dart';
+import 'package:chatapp/core/constant/constants.dart';
+import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_cubit.dart';
+import 'package:chatapp/features/auth/presentation/cubit/auth_cubit/auth_states.dart';
+import 'package:chatapp/features/chat/presentation/view/chat_page.dart';
+import 'package:chatapp/features/auth/presentation/view/register_screen.dart';
+import 'package:chatapp/features/auth/presentation/widgets/custom_button.dart';
+import 'package:chatapp/features/auth/presentation/widgets/custom_textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -19,32 +19,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? email, password;
-
-  bool isloading = false;
-
-  final formkey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<Logincubit, LoginStates>(
+    var cubit = BlocProvider.of<AuthCubit>(context);
+    return BlocConsumer<AuthCubit, AuthStates>(
       listener: (context, state) {
-        if (state is Loginloading) {
-          isloading = true;
-          setState(() {});
-        } else if (state is LoginSucceeded) {
-          isloading = false;
-          setState(() {});
-          emailController.clear();
-          passwordController.clear();
+        if (state is AuthSucceededState) {
           Navigator.pushNamed(
             context,
             ChatPage.id,
-            arguments: {'email': email, 'name': state.name},
+            arguments: {
+              'email': cubit.emailController.text,
+              'name': state.name,
+            },
           );
-        } else if (state is LoginFailure) {
-          isloading = false;
-          setState(() {});
+        } else if (state is AuthFailureState) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
@@ -54,11 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
         return Scaffold(
           backgroundColor: kPrimaryColor,
           body: ModalProgressHUD(
-            inAsyncCall: isloading,
+            inAsyncCall: state is AuthLoadingState ? true : false,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Form(
-                key: formkey,
+                key: cubit.formKey,
 
                 child: ListView(
                   children: [
@@ -85,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 10),
                     CustomTextfieldWidget(
-                      controller: emailController,
+                      controller: cubit.emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "field is required";
@@ -98,9 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
 
-                      onchanged: (value) {
-                        email = value;
-                      },
                       hint: "Email",
                       label: "Email",
                     ),
@@ -109,37 +95,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     CustomTextfieldWidget(
                       suffixIcon: IconButton(
                         onPressed: () {
-                          enablepass = !enablepass;
+                          enablePass = !enablePass;
                           setState(() {});
                         },
-                        icon: enablepass
+                        icon: enablePass
                             ? Icon(Icons.remove_red_eye)
                             : Icon(Icons.visibility_off),
                         color: Colors.white,
                       ),
-                      controller: passwordController,
+                      controller: cubit.passwordController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "field is required";
                         }
                         return null;
                       },
-                      onchanged: (value) {
-                        password = value;
-                      },
+
                       hint: "password",
                       label: "password",
-                      obscure: enablepass,
+                      obscure: enablePass,
                     ),
 
                     const SizedBox(height: 20),
 
                     CustomButton(
-                      onpressed: () {
-                        if (formkey.currentState!.validate()) {
-                          BlocProvider.of<Logincubit>(
-                            context,
-                          ).login(email: email!, password: password!);
+                      onPressed: () {
+                        if (cubit.formKey.currentState!.validate()) {
+                          cubit.login();
                         }
                       },
                       text: "Login",
